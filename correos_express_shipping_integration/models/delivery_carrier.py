@@ -18,12 +18,17 @@ class CorreosDeliveryCarrier(models.Model):
     correos_express_carriage = fields.Selection([('P', 'Paid P'), ('D', 'Due D')], string="Carriage")
     correos_express_packaging_id = fields.Many2one('product.packaging', string="Default Package Type")
     correos_express_product_code = fields.Char("Service Code",help="Provided by Correos Express", default="63")
+    delivery_type_correos_express = fields.Selection(
+        [('fixed', 'Correos Express Fixed Price'), ('base_on_rule', 'Correos Express Based on Rules')],
+        string='Correos Express Pricing',
+        default='fixed')
 
 
-    def correos_express_rate_shipment(self, order):
-        return {'success': True, 'price': 0.0, 'error_message': False, 'warning_message': False}
-
-
+    def correos_express_rate_shipment(self, order):    	
+        if self.delivery_type_correos_express == 'fixed':
+            return self.fixed_rate_shipment(order)
+        if self.delivery_type_correos_express == 'base_on_rule':
+            return self.base_on_rule_rate_shipment(order)
 
     def get_correos_express_parcels(self,total_weight=False,packages=False):
         number_of_package=0

@@ -5,6 +5,28 @@
         <field name="model">delivery.carrier</field>
         <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
         <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='integration_level']" position="after">
+                <field name="delivery_type_correos_express" widget="radio"
+                       attrs="{'invisible': [('delivery_type', '!=', 'correos_express')], 'required': [('delivery_type', '==', 'correos_express')]}"/>
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page string="Pricing"
+                      attrs="{'invisible': [('delivery_type', 'not in', ['correos_express'])]}">
+                    <group
+                            attrs="{'invisible':['|',('delivery_type', '==', 'base_on_rule'),('delivery_type_correos_express', '==', 'base_on_rule')]}">
+                        <group>
+                            <field name="fixed_price"/>
+                        </group>
+                    </group>
+                    <group name="general"
+                           attrs="{'invisible':['|',('delivery_type', '==', 'fixed'),('delivery_type_correos_express', '==', 'fixed')]}">
+                        <field name="price_rule_ids" nolabel="1"/>
+                    </group>
+                </page>
+            </xpath>
+
+
             <xpath expr="//page[@name='destination']" position='before'>
                 <page string="Correos Express Configuration" name="correos_express_configuration"
                       attrs="{'invisible': [('delivery_type', '!=', 'correos_express')]}">

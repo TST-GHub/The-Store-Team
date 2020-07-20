@@ -161,7 +161,7 @@ class CorreosDeliveryCarrier(models.Model):
             raise ValidationError(e)
 
     def correos_express_get_tracking_link(self, picking):
-        res = '{0}{1}'.format("https://www.correosexpress.com/web/correosexpress/home&shippingNumber=", picking.correos_express_shipment_number)
+        res = '{0}{1}'.format("https://s.correosexpress.com/SeguimientoSinCP/search?n=", picking.correos_express_shipment_number)
         return res
 
     def correos_express_cancel_shipment(self, picking):
